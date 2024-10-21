@@ -64,11 +64,21 @@ public class UserController {
     }
 
     @PutMapping("/user/{id}")
-    User updateUser(@RequestBody User newUser, @PathVariable Long id) {
+    User updateUser(@RequestParam("name") String name,
+                    @RequestParam("username") String username,
+                    @RequestParam("email") String email,
+                    @RequestParam("dob") Date dob,
+                    @RequestParam("address") String address,
+                    @RequestParam("avatar") MultipartFile avatar,
+                    @PathVariable Long id) {
         return userRepository.findById(id).map(user->{
-            user.setUsername(newUser.getUsername());
-            user.setName(newUser.getName());
-            user.setEmail(newUser.getEmail());
+            user.setUsername(username);
+            user.setName(name);
+            user.setEmail(email);
+            FileService file=new FileService();
+            file.delete(user.getAvatar());
+            String avatarName= uploadUserAvatarService.uploadUserAvatar(avatar);
+            user.setAvatar(avatarName);
             return userRepository.save(user);
         }).orElseThrow(()-> new UserNotFoundException(id));
     }
