@@ -12,27 +12,25 @@ import java.io.IOException;
 
 @RestController
 @CrossOrigin("http://localhost:3000")
-public class FileUpLoadController {
+public class AvatarController {
     private ServletContext servletContext;
 
     @Autowired
     public void setServletContext(ServletContext servletContext) {
         this.servletContext = servletContext;
     }
+    private static final String USER_AVATAR_UPLOAD_DIR = "src/main/webapp/resources/images/UserAvatar/";
 
-    // Define the local directory where images will be saved
-    private static final String UPLOAD_DIR = "src/main/webapp/resources/images/";
-
-    @PostMapping("/upload/image")
-    public String uploadImage(@RequestParam("testUpload") MultipartFile file) {
+    @PostMapping("/upload/user-avatar")
+    public String uploadUserAvatar(MultipartFile file) {
         if (file.isEmpty()) {
             return "Please select a file to upload";
         }
         try {
             byte[] bytes = file.getBytes();
-            String rootPath = this.servletContext.getRealPath("/resources/images");
+            String rootPath = this.servletContext.getRealPath("/resources/images/UserAvatar/");
 
-            File dir = new File(UPLOAD_DIR);
+            File dir = new File(USER_AVATAR_UPLOAD_DIR);
             if (!dir.exists())
                 dir.mkdirs();
             String filename = System.currentTimeMillis() + "-" + file.getOriginalFilename();
@@ -45,7 +43,7 @@ public class FileUpLoadController {
                     new FileOutputStream(serverFile));
             stream.write(bytes);
             stream.close();
-            return "File uploaded successfully: " + filename;
+            return filename;
 
         } catch (IOException e) {
             // TODO Auto-generated catch block
@@ -53,5 +51,12 @@ public class FileUpLoadController {
             return "Error uploading file: " + e.getMessage();
         }
     }
+
+    @GetMapping("/api/avatar/{filename}")
+    public String getAvatarPath(@PathVariable String filename) {
+        return "webapp/resources/images/UserAvatar/" + filename;
+    }
+
+
 }
 
