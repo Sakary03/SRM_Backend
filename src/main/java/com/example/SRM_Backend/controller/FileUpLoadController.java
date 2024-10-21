@@ -12,7 +12,7 @@ import java.io.IOException;
 
 @RestController
 @CrossOrigin("http://localhost:3000")
-public class AvatarController {
+public class FileUpLoadController {
     private ServletContext servletContext;
 
     @Autowired
@@ -51,12 +51,6 @@ public class AvatarController {
             return "Error uploading file: " + e.getMessage();
         }
     }
-
-    @GetMapping("/api/avatar/{filename}")
-    public String getAvatarPath(@PathVariable String filename) {
-        return "webapp/resources/images/UserAvatar/" + filename;
-    }
-
 
 }
 

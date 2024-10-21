@@ -18,7 +18,7 @@ public class User {
     private String email;
     private String address;
     private String role = "user";
-
+    private String avatar;
     @ManyToMany
     @JoinTable(
             name = "user_manga",
@@ -90,6 +90,14 @@ public class User {
 
     public void setMangas(Set<Manga> mangas) {
         this.mangas = mangas;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }
 
