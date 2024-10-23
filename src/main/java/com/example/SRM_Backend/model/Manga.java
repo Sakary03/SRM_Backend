@@ -11,9 +11,9 @@ public class Manga {
     private Long bookID;
 
     private String name;
-    private int numChapter;
-    private double rating;
-
+    private int numChapter=0;
+    private double rating=10;
+    private String poster;
     @ManyToMany
     @JoinTable(
             name = "manga_category",
@@ -46,11 +46,11 @@ public class Manga {
     }
 
     public int getNumChapter() {
-        return numChapter;
+        return chapters != null ? chapters.size() : 0;
     }
 
     public void setNumChapter(int numChapter) {
-        this.numChapter = numChapter;
+        this.numChapter = chapters.size();
     }
 
     public double getRating() {

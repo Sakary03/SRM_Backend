@@ -13,6 +13,7 @@ public class Category {
 
     private String categoryName;
 
+    private String overview;
     @ManyToMany(mappedBy = "categories")
     private Set<Manga> mangas;
 
@@ -40,6 +41,14 @@ public class Category {
 
     public void setMangas(Set<Manga> mangas) {
         this.mangas = mangas;
+    }
+
+    public String getOverview() {
+        return overview;
+    }
+
+    public void setOverview(String overview) {
+        this.overview = overview;
     }
 }
 
