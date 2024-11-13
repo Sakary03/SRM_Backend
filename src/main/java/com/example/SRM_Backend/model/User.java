@@ -1,6 +1,7 @@
 package com.example.SRM_Backend.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.Date;
 import java.util.Set;
@@ -19,12 +20,22 @@ public class User {
     private String address;
     private String role = "user";
     private String avatar;
+    @NotBlank(message = "Password không được để trống")
+    private String password;
     @ManyToMany
     @JoinTable(
             name = "user_manga",
             joinColumns = @JoinColumn(name = "userID"),
             inverseJoinColumns = @JoinColumn(name = "bookID"))
     private Set<Manga> mangas;
+
+    public User(String email, String password) {
+
+    }
+
+    public User() {
+
+    }
 
     // Getters and Setters
 
@@ -98,6 +109,14 @@ public class User {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public @NotBlank(message = "Password không được để trống") String getPassword() {
+        return password;
+    }
+
+    public void setPassword(@NotBlank(message = "Password không được để trống") String password) {
+        this.password = password;
     }
 }
 

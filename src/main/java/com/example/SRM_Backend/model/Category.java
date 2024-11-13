@@ -1,7 +1,10 @@
 package com.example.SRM_Backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -12,10 +15,11 @@ public class Category {
     private Long categoryID;
 
     private String categoryName;
-
     private String overview;
+
     @ManyToMany(mappedBy = "categories")
-    private Set<Manga> mangas;
+    @JsonBackReference
+    private Set<Manga> mangas = new HashSet<>();
 
     // Getters and Setters
 
@@ -43,6 +47,10 @@ public class Category {
         this.mangas = mangas;
     }
 
+    public void addManga(Manga manga) {
+        this.mangas.add(manga);
+    }
+
     public String getOverview() {
         return overview;
     }
@@ -51,4 +59,3 @@ public class Category {
         this.overview = overview;
     }
 }
-

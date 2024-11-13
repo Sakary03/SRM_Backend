@@ -1,6 +1,10 @@
 package com.example.SRM_Backend.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -11,23 +15,26 @@ public class Manga {
     private Long bookID;
 
     private String name;
-    private int numChapter=0;
-    private double rating=10;
+    private int numChapter = 0;
+    private double rating = 10.0;
     private String poster;
+
     @ManyToMany
     @JoinTable(
             name = "manga_category",
             joinColumns = @JoinColumn(name = "bookID"),
             inverseJoinColumns = @JoinColumn(name = "categoryID"))
-    private Set<Category> categories;
+    @JsonManagedReference
+    private Set<Category> categories = new HashSet<>();
 
     @OneToMany(mappedBy = "manga")
-    private Set<Chapter> chapters;
+    @JsonIgnore
+    private Set<Chapter> chapters = new HashSet<>();
 
     @OneToMany(mappedBy = "manga")
-    private Set<Comment> comments;
+    @JsonIgnore
+    private Set<Comment> comments = new HashSet<>();
 
-    // Getters and Setters
 
     public Long getBookID() {
         return bookID;
@@ -50,7 +57,7 @@ public class Manga {
     }
 
     public void setNumChapter(int numChapter) {
-        this.numChapter = chapters.size();
+        this.numChapter = numChapter;
     }
 
     public double getRating() {
@@ -69,6 +76,10 @@ public class Manga {
         this.categories = categories;
     }
 
+    public void addCategory(Category category) {
+        this.categories.add(category);
+    }
+
     public Set<Chapter> getChapters() {
         return chapters;
     }
@@ -84,5 +95,12 @@ public class Manga {
     public void setComments(Set<Comment> comments) {
         this.comments = comments;
     }
-}
 
+    public String getPoster() {
+        return poster;
+    }
+
+    public void setPoster(String poster) {
+        this.poster = poster;
+    }
+}

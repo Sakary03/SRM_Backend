@@ -2,7 +2,7 @@ package com.example.SRM_Backend.model;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.util.*;
 
 @Entity
 public class Chapter {
@@ -13,6 +13,9 @@ public class Chapter {
 
     private int chapterIndex;
     private Date dateUpdate;
+    private int numPages=0;
+    @ElementCollection
+    private List<String> pages=new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "bookID")
@@ -50,5 +53,22 @@ public class Chapter {
 
     public void setManga(Manga manga) {
         this.manga = manga;
+    }
+
+    public int getNumPages() {
+        numPages=pages.size();
+        return numPages;
+    }
+
+    public void setNumPages(int numPages) {
+        this.numPages = numPages;
+    }
+
+    public List<String> getPages() {
+        return pages;
+    }
+
+    public void setPages(List<String> pages) {
+        this.pages = pages;
     }
 }
