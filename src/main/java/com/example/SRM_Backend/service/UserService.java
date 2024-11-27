@@ -11,20 +11,19 @@ public class UserService {
     @Autowired
     public UserRepository userRepository;
 
-    public User saveUser(UserRequest userRequest) {
-        User newUser=new User();
-        newUser.setName(userRequest.getName());
-        newUser.setUsername(userRequest.getUsername());
-        newUser.setDob(userRequest.getDob());
-        newUser.setEmail(userRequest.getEmail());
-        newUser.setAddress(userRequest.getAddress());
-        newUser.setRole(userRequest.getRole());
-        newUser.setPassword(userRequest.getPassword());
-        newUser.setAvatar(userRequest.getAvatar());
+    public User createUser(UserRequest userRequest) {
+        User newUser=new User(userRequest);
         return userRepository.save(newUser);
     }
 
     public User getUserByUsername (String username) {
         return userRepository.findByUsername(username);
+    }
+
+    public Boolean isUsernameExist(String username) {
+        return userRepository.existsByUsername(username);
+    }
+    public Boolean isEmailExist(String email) {
+        return userRepository.existsByEmail(email);
     }
 }

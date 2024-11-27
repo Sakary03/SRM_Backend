@@ -1,4 +1,11 @@
 package com.example.SRM_Backend.model;
 
-public class Role {
+public enum Role {
+    USER,
+    ADMIN,
+    STAFF;
+
+    public String toAuthority() {
+        return "ROLE_" + this.name();
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.SRM_Backend.controller;
 import com.example.SRM_Backend.dto.request.UserRequest;
 import com.example.SRM_Backend.exception.UserNotFoundException;
+import com.example.SRM_Backend.model.Role;
 import com.example.SRM_Backend.model.User;
 import com.example.SRM_Backend.repository.UserRepository;
 import com.example.SRM_Backend.service.CloudinaryService;
@@ -11,6 +12,7 @@ import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,7 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin("http://localhost:3000")
+@RequestMapping("/api/user")
 public class UserController {
 
     private static final String user_upload_dir="src/main/webapp/resources/images/UserAvatar/";
@@ -48,15 +51,19 @@ public class UserController {
     @Autowired
     private CloudinaryService   cloudinaryService;
 
-    @PostMapping("/user")
-    public ResponseEntity<User> newUser(@RequestParam("name") String name,
+    @PostMapping("/create-user")
+    public ResponseEntity<?> newUser(@RequestParam("name") String name,
                                   @RequestParam("username") String username,
                                   @RequestParam("email") String email,
                                   @RequestParam("dob") @DateTimeFormat(pattern = "yyyy-MM-dd") Date dob,
                                   @RequestParam("address") String address,
                                   @RequestParam("password") String password,
-                                  @RequestParam("role") String role,
+                                  @RequestParam("role") Role role,
                                   @RequestParam("avatar") MultipartFile avatar) {
+        if (userService.isEmailExist(email) || userService.isUsernameExist(username)) {
+            return new ResponseEntity<>("User existed", HttpStatus.BAD_REQUEST);
+        }
+
         Map<String, Object> avaData = cloudinaryService.upload(avatar);
         String avatarUrl = avaData.get("secure_url").toString();
 
@@ -72,17 +79,17 @@ public class UserController {
         return new ResponseEntity<>(userRepository.save(newUser), HttpStatus.OK);
     }
 
-    @GetMapping("/users")
+    @GetMapping("/")
     List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/{id}")
     User getUserById(@PathVariable Long id) {
         return userRepository.findById(id).orElseThrow(()->new UserNotFoundException(id));
     }
 
-    @PutMapping("/user/{id}")
+    @PutMapping("/update/{id}")
     User updateUser(@RequestParam("name") String name,
                     @RequestParam("username") String username,
                     @RequestParam("email") String email,
@@ -105,7 +112,7 @@ public class UserController {
         }).orElseThrow(()-> new UserNotFoundException(id));
     }
 
-    @DeleteMapping("/user/{id}")
+    @DeleteMapping("/delete/{id}")
     String deleteUser(@PathVariable Long id) throws IOException {
         if(!userRepository.existsById(id)) {
             throw new UserNotFoundException(id);

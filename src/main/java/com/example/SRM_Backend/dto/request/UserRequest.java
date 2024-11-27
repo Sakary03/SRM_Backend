@@ -1,5 +1,6 @@
 package com.example.SRM_Backend.dto.request;
 
+import com.example.SRM_Backend.model.Role;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.Date;
 
@@ -11,7 +12,7 @@ public class UserRequest {
     private String address;
     private String password;
     private String avatar="sth";
-    private String role;
+    private Role role;
     public String getName() {
         return name;
     }
@@ -68,11 +69,11 @@ public class UserRequest {
         this.avatar = avatar;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 }

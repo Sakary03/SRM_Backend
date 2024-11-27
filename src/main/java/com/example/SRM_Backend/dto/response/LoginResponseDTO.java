@@ -2,7 +2,7 @@ package com.example.SRM_Backend.dto.response;
 
 public class LoginResponseDTO {
     private String accessToken;
-
+    private String role;
     public String getAccessToken() {
         return accessToken;
     }
@@ -11,4 +11,11 @@ public class LoginResponseDTO {
         this.accessToken = accessToken;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 }

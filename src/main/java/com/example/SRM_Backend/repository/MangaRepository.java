@@ -11,4 +11,6 @@ public interface MangaRepository extends JpaRepository<Manga, Long> {
 
     // Custom method to find all mangas in a specific category
     List<Manga> findByCategories_CategoryID(Long categoryId);
+
+    List<Manga> findTop5ByOrderByBookID();
 }

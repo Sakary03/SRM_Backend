@@ -1,4 +1,4 @@
-package com.example.SRM_Backend.config;
+package com.example.SRM_Backend.security;
 import com.example.SRM_Backend.dto.response.RestResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;

@@ -58,4 +58,8 @@ public class Category {
     public void setOverview(String overview) {
         this.overview = overview;
     }
+
+    public void removeManga (Manga manga) {
+        this.mangas.remove(manga);
+    }
 }

@@ -23,4 +23,9 @@ public class CateService {
             throw new RuntimeException("Category with ID " + categoryID + " not found");
         }
     }
+
+    public Category removeManga(Category category, Manga manga) {
+        category.removeManga(manga);
+        return category;
+    }
 }

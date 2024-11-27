@@ -16,6 +16,7 @@ import java.util.Set;
 
 @RestController
 @CrossOrigin("http://localhost:3000")
+@RequestMapping("/api/chapter")
 public class ChapterController {
     @Autowired
     MangaRepository mangaRepository;

@@ -1,4 +1,4 @@
-package com.example.SRM_Backend.service;
+package com.example.SRM_Backend.security;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;

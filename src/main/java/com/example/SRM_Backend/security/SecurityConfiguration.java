@@ -1,11 +1,12 @@
-package com.example.SRM_Backend.config;
+package com.example.SRM_Backend.security;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-import com.example.SRM_Backend.service.SecurityService;
+import com.example.SRM_Backend.security.SecurityService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -37,7 +38,17 @@ public class SecurityConfiguration {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
+    String[] whiteList = {
+            "/",
+            "/api/v1/auth/login", "/api/v1/auth/refresh", "/api/v1/auth/register",
+            "/storage/**",
+            "/api/v1/email/**",
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            "/swagger-ui/index.html",
+            "/api-docs/**"
+    };
     @Bean
     public SecurityFilterChain filterChain(
             HttpSecurity http,
@@ -46,7 +57,14 @@ public class SecurityConfiguration {
                 .csrf(c -> c.disable())
                 .authorizeHttpRequests(
                         authz -> authz
+                                .requestMatchers("/").permitAll()
                                 .requestMatchers("/", "/login").permitAll()
+                                .requestMatchers("/user").permitAll()
+                                .requestMatchers("/swagger-ui").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/swagger-resources/**").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/swagger-ui/**").permitAll()
+                                .requestMatchers("/v3/api-docs").permitAll()
+                                .requestMatchers(whiteList).permitAll()
                                 .anyRequest().authenticated())
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults())
                         .authenticationEntryPoint(customAuthenticationEntryPoint))
@@ -96,5 +114,6 @@ public class SecurityConfiguration {
         return new SecretKeySpec(keyBytes, 0, keyBytes.length,
                 SecurityService.JWT_ALGORITHM.getName());
     }
+
 
 }

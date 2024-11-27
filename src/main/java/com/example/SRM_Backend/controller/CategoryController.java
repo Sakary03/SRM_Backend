@@ -10,16 +10,17 @@ import java.util.List;
 
 @RestController
 @CrossOrigin("http://localhost:3000")
+@RequestMapping("/api/category")
 public class CategoryController {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    @GetMapping("/categories")
-    List<Category> listCategory() {
+    @GetMapping("/")
+    List<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
 
-    @PostMapping("/category")
+    @PostMapping("/create-category")
     Category addCategory(@RequestParam("category_name") String category_name,
                          @RequestParam("overview") String overview) {
         Category newCategory = new Category();

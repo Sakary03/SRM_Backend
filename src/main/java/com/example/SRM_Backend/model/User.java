@@ -1,5 +1,6 @@
 package com.example.SRM_Backend.model;
 
+import com.example.SRM_Backend.dto.request.UserRequest;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -18,8 +19,9 @@ public class User {
     private Date dob;
     private String email;
     private String address;
-    private String role = "user";
     private String avatar;
+    @Enumerated(EnumType.STRING)
+    private Role role=Role.USER;
     @NotBlank(message = "Password không được để trống")
     private String password;
     @ManyToMany
@@ -29,6 +31,28 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "bookID"))
     private Set<Manga> mangas;
 
+    public User(Long userID, String name, Date dob, String username, String email, String address, String avatar, Role role, String password) {
+        this.userID = userID;
+        this.name = name;
+        this.dob = dob;
+        this.username = username;
+        this.email = email;
+        this.address = address;
+        this.avatar = avatar;
+        this.role = role;
+        this.password = password;
+    }
+
+    public User(UserRequest userRequest) {
+        this.setName(userRequest.getName());
+        this.setUsername(userRequest.getUsername());
+        this.setDob(userRequest.getDob());
+        this.setEmail(userRequest.getEmail());
+        this.setAddress(userRequest.getAddress());
+        this.setRole(userRequest.getRole());
+        this.setPassword(userRequest.getPassword());
+        this.setAvatar(userRequest.getAvatar());
+    }
     public User(String email, String password) {
 
     }
@@ -87,11 +111,11 @@ public class User {
         this.address = address;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
