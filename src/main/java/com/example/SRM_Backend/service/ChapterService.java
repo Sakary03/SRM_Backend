@@ -43,4 +43,13 @@ public class ChapterService {
             throw new MangaNotFoundException(chapterResponseDTO.getBookid());
         }
     }
+
+    public List<Chapter> makeFillTenChapter(List<Chapter> listChapter) {
+        int i=0;
+        while (listChapter.size()<10) {
+            listChapter.add(listChapter.get(i));
+            i++;
+        }
+        return listChapter;
+    }
 }

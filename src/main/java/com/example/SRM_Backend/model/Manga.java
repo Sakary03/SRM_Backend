@@ -18,6 +18,9 @@ public class Manga {
     private int numChapter = 0;
     private double rating = 10.0;
     private String poster;
+    private String overview;
+    private String author;
+    private int viewed=0;
 
     @ManyToMany
     @JoinTable(
@@ -102,5 +105,29 @@ public class Manga {
 
     public void setPoster(String poster) {
         this.poster = poster;
+    }
+
+    public String getOverview() {
+        return overview;
+    }
+
+    public void setOverview(String overview) {
+        this.overview = overview;
+    }
+
+    public int getViewed() {
+        return viewed;
+    }
+
+    public void setViewed(int viewed) {
+        this.viewed = viewed;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 }

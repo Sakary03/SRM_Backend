@@ -1,9 +1,12 @@
 package com.example.SRM_Backend.controller;
 import com.example.SRM_Backend.dto.request.UserRequest;
 import com.example.SRM_Backend.exception.UserNotFoundException;
+import com.example.SRM_Backend.model.Category;
 import com.example.SRM_Backend.model.Role;
 import com.example.SRM_Backend.model.User;
+import com.example.SRM_Backend.repository.CategoryRepository;
 import com.example.SRM_Backend.repository.UserRepository;
+import com.example.SRM_Backend.sampleData.SampleUserData;
 import com.example.SRM_Backend.service.CloudinaryService;
 import com.example.SRM_Backend.service.ImageService;
 import com.example.SRM_Backend.service.UserService;
@@ -27,7 +30,7 @@ import java.util.Optional;
 
 
 @RestController
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/user")
 public class UserController {
 
@@ -36,6 +39,10 @@ public class UserController {
     private UserService userService;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private SampleUserData sampleUserData;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -93,21 +100,25 @@ public class UserController {
     User updateUser(@RequestParam("name") String name,
                     @RequestParam("username") String username,
                     @RequestParam("email") String email,
-                    @RequestParam("dob") Date dob,
+                    @RequestParam("dob") @DateTimeFormat(pattern = "yyyy-MM-dd") Date dob,
                     @RequestParam("address") String address,
-                    @RequestParam("avatar") MultipartFile avatar,
+                    @RequestParam(value = "avatarFile", required = false) MultipartFile avatarFile,
+                    @RequestParam(value = "avatarUrl", required = false) String avatarUrl,
                     @PathVariable Long id) {
         return userRepository.findById(id).map(user->{
             user.setUsername(username);
             user.setName(name);
             user.setEmail(email);
-            try {
-                cloudinaryService.delete(cloudinaryService.publicIdExtractor(user.getAvatar()));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            user.setDob(dob);
+            if (avatarFile!=null) {
+                try {
+                    cloudinaryService.delete(cloudinaryService.publicIdExtractor(user.getAvatar()));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                String avatarName = cloudinaryService.upload(avatarFile).get("secure_url").toString();
+                user.setAvatar(avatarName);
             }
-            String avatarName= cloudinaryService.upload(avatar).get("secure_url").toString();
-            user.setAvatar(avatarName);
             return userRepository.save(user);
         }).orElseThrow(()-> new UserNotFoundException(id));
     }
@@ -124,4 +135,13 @@ public class UserController {
         return "User with id "+id+" deleted";
     }
 
+    @GetMapping("/category")
+    List<Category> getAllCategories() {
+        return categoryRepository.findAll();
+    }
+
+//    @GetMapping("/init")
+//    List<User> iniUserData() {
+//        return sampleUserData.createUsers();
+//    }
 }

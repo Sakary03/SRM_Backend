@@ -1,23 +1,30 @@
 package com.example.SRM_Backend.controller;
-
-
 import com.example.SRM_Backend.model.Category;
 import com.example.SRM_Backend.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+
 
 @RestController
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/category")
 public class CategoryController {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    @GetMapping("/")
+    @GetMapping("/get-all")
     List<Category> getAllCategories() {
         return categoryRepository.findAll();
+    }
+
+    @GetMapping("/get-by-id/{id}")
+    public ResponseEntity<?> getCateById(@PathVariable Long id) {
+        return new ResponseEntity<>(categoryRepository.findById(id), HttpStatus.OK);
     }
 
     @PostMapping("/create-category")

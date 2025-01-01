@@ -40,14 +40,20 @@ public class SecurityConfiguration {
     }
     String[] whiteList = {
             "/",
-            "/api/v1/auth/login", "/api/v1/auth/refresh", "/api/v1/auth/register",
+            "/auth/login", "/auth/refresh", "/auth/register",
             "/storage/**",
             "/api/v1/email/**",
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/swagger-ui/index.html",
-            "/api-docs/**"
+            "/api-docs/**",
+            "/cloudinary/upload",
+            "/api/manga/**",
+            "/api/user/**",
+            "/api/category/**",
+            "/api/chapter/**",
+
     };
     @Bean
     public SecurityFilterChain filterChain(
@@ -58,12 +64,13 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(
                         authz -> authz
                                 .requestMatchers("/").permitAll()
-                                .requestMatchers("/", "/login").permitAll()
+                                .requestMatchers("/", "/auth/login").permitAll()
                                 .requestMatchers("/user").permitAll()
                                 .requestMatchers("/swagger-ui").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/swagger-resources/**").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/swagger-ui/**").permitAll()
                                 .requestMatchers("/v3/api-docs").permitAll()
+                                .requestMatchers("/api/manga/").permitAll()
                                 .requestMatchers(whiteList).permitAll()
                                 .anyRequest().authenticated())
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults())
